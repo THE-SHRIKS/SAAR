@@ -1,0 +1,39 @@
+---
+interface Props {
+  title: string;
+  code: string;
+}
+const { title, code } = Astro.props;
+const lines = code.split("\n");
+---
+
+<div class="code" data-code>
+  <div class="code__bar">
+    <span>{title}</span>
+    <button type="button" data-copy>Copy</button>
+  </div>
+  <pre><code>{lines.map((line) => (
+    <Fragment>{line.startsWith("#") ? <span class="c">{line}</span> : line}{"\n"}</Fragment>
+  ))}</code></pre>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-code]").forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>("[data-copy]");
+    const pre = box.querySelector("pre");
+    btn?.addEventListener("click", async () => {
+      const text = (pre?.textContent ?? "")
+        .split("\n")
+        .filter((l) => !l.startsWith("#"))
+        .join("\n")
+        .trim();
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "Copied";
+      } catch {
+        btn.textContent = "Select and copy";
+      }
+      setTimeout(() => (btn.textContent = "Copy"), 1800);
+    });
+  });
+</script>

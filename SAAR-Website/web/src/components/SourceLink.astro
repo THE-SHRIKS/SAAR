@@ -1,0 +1,13 @@
+---
+import { sourceHref } from "../data/site";
+
+interface Props {
+  path: string;
+  kind?: "blob" | "tree";
+  label?: string;
+}
+
+const { path, kind = "blob", label } = Astro.props;
+---
+
+<a class="src" href={sourceHref(path, kind)} target="_blank" rel="noreferrer">{label ?? path}<span aria-hidden="true">↗</span></a>

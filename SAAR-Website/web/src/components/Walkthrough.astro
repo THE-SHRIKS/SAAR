@@ -1,0 +1,58 @@
+---
+import { STEPS } from "../data/site";
+---
+
+<div class="walk" data-walk>
+  <ol class="walk__steps">
+    {STEPS.map((step, i) => (
+      <li class:list={["walk__step", i === 0 && "is-active"]} data-step={i}>
+        <span class="walk__n px">{step.n}</span>
+        <h3>{step.title}</h3>
+        <p>{step.text}</p>
+        <canvas class="pxart walk__mini" data-mini={i} data-cell="5" style="aspect-ratio:5 / 4" role="img" aria-label={step.alt}></canvas>
+      </li>
+    ))}
+  </ol>
+  <div class="walk__stage">
+    <canvas class="pxart" data-walk-canvas data-cell="6" style="aspect-ratio:5 / 4" role="img" aria-label="Animated pixel illustration of the current step"></canvas>
+  </div>
+</div>
+
+<script>
+  import { mount } from "../scripts/pixel";
+  import { SCENES, WALK_ORDER } from "../scripts/pixel-scenes";
+
+  const root = document.querySelector<HTMLElement>("[data-walk]");
+  const scenes = WALK_ORDER.map((n) => SCENES[n]!);
+  const opts = { ink: "#dedfe4", accent: "#0a0b10" };
+  if (root) {
+    const stage = root.querySelector<HTMLCanvasElement>("[data-walk-canvas]");
+    const big = stage ? mount(stage, scenes, { cell: 6, ...opts }) : null;
+    const steps = [...root.querySelectorAll<HTMLElement>("[data-step]")];
+    steps.forEach((el, i) => {
+      const mini = el.querySelector<HTMLCanvasElement>("[data-mini]");
+      if (mini) mount(mini, [scenes[i]!], { cell: 5, ...opts });
+    });
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const i = Number((entry.target as HTMLElement).dataset.step);
+          steps.forEach((el, k) => el.classList.toggle("is-active", k === i));
+          big?.set(i);
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    steps.forEach((el) => io.observe(el));
+  }
+</script>
+
+<style>
+  .pxart {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+  }
+</style>

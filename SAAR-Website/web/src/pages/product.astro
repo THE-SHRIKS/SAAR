@@ -1,0 +1,106 @@
+---
+import Base from "../layouts/Base.astro";
+import PixelArt from "../components/PixelArt.astro";
+import SourceLink from "../components/SourceLink.astro";
+import { REPO } from "../data/site";
+---
+
+<Base title="Product" description="What SAAR does: document ingestion with provenance, deterministic reconciliation, grounded local answers, source-traceable reports and encrypted backups.">
+  <header class="phead wrap">
+    <p class="float" style="top:22%;right:3%">(01) A desktop application.<br />Screenshots use synthetic data.</p>
+    <div class="phead__text">
+      <p class="eyebrow rise">Product</p>
+      <h1 class="rise" style="--d:100ms">One workspace, a clear trail.</h1>
+      <p class="lede rise" style="--d:220ms">SAAR is a desktop application for people who work with financial documents and need to know where every number came from. Here is what it does, step by step.</p>
+    </div>
+    <div class="phead__art rise" style="--d:300ms"><PixelArt scene="import" ratio="5 / 4" label="Pixel illustration: documents dropping into a workspace tray" /></div>
+  </header>
+
+  <div class="sand">
+  <div class="wrap">
+    <section class="cap reveal">
+      <div class="cap__text">
+        <span class="cap__n px">01</span>
+        <h2>Documents and evidence</h2>
+        <p>Digital PDFs, statement CSVs and image-based documents go through a local OCR worker. Extracted fields keep their page and position, so a value is never separated from the place it was read.</p>
+        <ul>
+          <li>Content-hash de-duplication on import</li>
+          <li>File type checked by magic bytes, not by name</li>
+          <li>Field-level provenance shown beside the source</li>
+        </ul>
+        <p style="margin-top:1.4rem"><SourceLink path="src-tauri/src/ingestion" kind="tree" /></p>
+      </div>
+      <PixelArt scene="inspect" ratio="5 / 4" label="Pixel illustration: a lens reading one field of a source document" />
+    </section>
+
+    <section class="cap cap--flip reveal">
+      <div class="cap__text">
+        <span class="cap__n px">02</span>
+        <h2>Reconciliation you review</h2>
+        <p>Deterministic rules propose links between invoices and bank transactions. Nothing is applied silently: you approve, reject or correct each proposal, and every action lands in an audit trail.</p>
+        <ol class="passes">
+          <li><b>Reference and exact amount</b>An invoice number found as a whole token in the payment reference, with the exact amount.</li>
+          <li><b>Exact match</b>Amount and currency, with the reference or vendor present in the description.</li>
+          <li><b>Exact amount, nearby date</b>The same amount within a window of days, even when the text differs.</li>
+          <li><b>Mismatch explained</b>The vendor matches but the amount differs, with the difference explained as a fee or discount.</li>
+        </ol>
+        <p style="margin-top:1.4rem"><SourceLink path="src-tauri/src/finance/matching.rs" /></p>
+      </div>
+      <div>
+        <div class="frame"><img src="/assets/shots/05_reconciliation.webp" alt="SAAR reconciliation view with proposed links and flagged anomalies" width="1280" height="840" loading="lazy" /></div>
+        <p class="caption">From the running app, on synthetic data: 13 proposed links, 30 anomalies flagged.</p>
+      </div>
+    </section>
+
+    <section class="cap reveal">
+      <div class="cap__text">
+        <span class="cap__n px">03</span>
+        <h2>Questions, with receipts</h2>
+        <p>Ask in plain language. SAAR classifies the question, calculates the answer from stored records, and cites the transactions it used. Where it cannot compute a figure, it says so instead of guessing.</p>
+        <ul>
+          <li>Currencies are never mixed without a recorded rate</li>
+          <li>Verified figures are labelled separately from model prose</li>
+          <li>Prompt-injection attempts are quarantined, not answered</li>
+        </ul>
+        <p style="margin-top:1.4rem"><SourceLink path="src-tauri/src/ai/grounding.rs" /></p>
+      </div>
+      <PixelArt scene="ask" ratio="5 / 4" label="Pixel illustration: a question, a typed answer and evidence chips" />
+    </section>
+
+    <section class="cap cap--flip reveal">
+      <div class="cap__text">
+        <span class="cap__n px">04</span>
+        <h2>Reports that trace back</h2>
+        <p>Monthly income, expenses and net cash flow, calculated with exact integer arithmetic and kept separate per currency. Export CSV or PDF reports whose lines point at their source records.</p>
+        <p style="margin-top:1.4rem"><SourceLink path="src-tauri/src/finance/aggregates.rs" /></p>
+      </div>
+      <PixelArt scene="report" ratio="5 / 4" label="Pixel illustration: monthly income and expense bars with a net line" />
+    </section>
+
+    <section class="cap reveal">
+      <div class="cap__text">
+        <span class="cap__n px">05</span>
+        <h2>Protection and recovery</h2>
+        <p>Each workspace is its own encrypted database. A backup is an authenticated archive that restores into a fresh profile, and it refuses a wrong passphrase or any tampered byte.</p>
+        <ul>
+          <li>SQLCipher per workspace, Argon2id key derivation</li>
+          <li>Encrypted document blobs, atomic writes</li>
+          <li><code>SAAR_DATA_DIR</code> relocates data for portable or isolated runs</li>
+        </ul>
+        <p style="margin-top:1.4rem"><a class="btn btn--solid" href="/security">Read the security page <span aria-hidden="true">→</span></a></p>
+      </div>
+      <PixelArt scene="vault" ratio="5 / 4" label="Pixel illustration: a vault with encrypted bytes circling it" />
+    </section>
+  </div>
+  </div>
+
+  <section class="section closing">
+    <div class="wrap reveal">
+      <h2>See it in the source.</h2>
+      <div class="btn-row">
+        <a class="btn btn--solid" href={REPO} target="_blank" rel="noreferrer">Open the repository <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--ghost" href="/docs">Read the docs</a>
+      </div>
+    </div>
+  </section>
+  </Base>

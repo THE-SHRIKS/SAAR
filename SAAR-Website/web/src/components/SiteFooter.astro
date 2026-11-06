@@ -1,0 +1,45 @@
+---
+import { REPO, REPO_BLOB, STATUS_DATE } from "../data/site";
+---
+
+<footer class="ftr on-dark">
+  <div class="wrap">
+    <div class="ftr__top">
+      <div class="ftr__brand">
+        <a class="ftr__logo" href="/" aria-label="SAAR home"><span class="wordmark">SAAR</span></a>
+        <p class="ftr__tag">Financial clarity, kept on your computer. An offline desktop workspace for financial documents, exact calculations, reconciliation and local AI.</p>
+      </div>
+      <div>
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/product">Product</a></li>
+          <li><a href="/security">Security</a></li>
+          <li><a href="/architecture">Architecture</a></li>
+          <li><a href="/docs">Docs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Source</h3>
+        <ul>
+          <li><a href={REPO} target="_blank" rel="noreferrer">Repository</a></li>
+          <li><a href={`${REPO_BLOB}README.md`} target="_blank" rel="noreferrer">README</a></li>
+          <li><a href={`${REPO_BLOB}STATUS.md`} target="_blank" rel="noreferrer">Status ledger</a></li>
+          <li><a href={`${REPO}/issues`} target="_blank" rel="noreferrer">Issues</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Read</h3>
+        <ul>
+          <li><a href={`${REPO_BLOB}Docs/ADR/0002-threat-model-and-fixture-registry.md`} target="_blank" rel="noreferrer">Threat model</a></li>
+          <li><a href={`${REPO_BLOB}Docs/AUDIT/0001-network-egress-denial-audit.md`} target="_blank" rel="noreferrer">Egress audit</a></li>
+          <li><a href={`${REPO_BLOB}Docs/WINDOWS_BUILD_GUIDE.md`} target="_blank" rel="noreferrer">Windows build guide</a></li>
+          <li><a href={`${REPO_BLOB}Docs/ATTRIBUTION.md`} target="_blank" rel="noreferrer">Attributions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ftr__base">
+      <span>SAAR · Built by THE SHRIKS</span>
+      <span>Screenshots use synthetic test data. The repository has no root licence file. Status ledger last updated {STATUS_DATE}.</span>
+    </div>
+  </div>
+</footer>

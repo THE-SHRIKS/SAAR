@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /404
 
-Sitemap: https://saar.vercel.app/sitemap.xml
+Sitemap: https://saar.theshriks.space/sitemap-index.xml

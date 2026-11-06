@@ -1,0 +1,20 @@
+---
+import { SECURITY } from "../data/site";
+import SourceLink from "./SourceLink.astro";
+
+interface Props {
+  limit?: number;
+}
+const { limit } = Astro.props;
+const rows = limit ? SECURITY.slice(0, limit) : SECURITY;
+---
+
+<ul class="rows">
+  {rows.map((row) => (
+    <li>
+      <span class="rows__label px">{row.label}</span>
+      <p class="rows__claim">{row.claim}</p>
+      <SourceLink path={row.path} kind={row.kind} />
+    </li>
+  ))}
+</ul>

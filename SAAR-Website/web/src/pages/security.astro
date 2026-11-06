@@ -1,0 +1,65 @@
+---
+import Base from "../layouts/Base.astro";
+import SecurityRows from "../components/SecurityRows.astro";
+import PixelArt from "../components/PixelArt.astro";
+import SourceLink from "../components/SourceLink.astro";
+
+const threats = [
+  { id: "TM-01", name: "Prompt injection through document text", text: "Hostile text in an invoice cannot give the model authority. The model never writes to the ledger, and a defence layer intercepts instruction overrides and fence escapes." },
+  { id: "TM-02", name: "Malicious PDFs", text: "Documents are parsed by memory-bounded, unprivileged code with page limits, so decompression bombs and malformed files fail safely." },
+  { id: "TM-03", name: "Path traversal and ingestion abuse", text: "File names are sanitised and ignored as storage keys. Files are stored by content hash." },
+  { id: "TM-04", name: "Data at rest", text: "The master key comes from your passphrase through Argon2id. The database and the document blobs are encrypted, and the passphrase is never written to disk." },
+  { id: "TM-05", name: "Network egress and telemetry", text: "No runtime network access. The web view policy blocks every connection, and there are no telemetry or updater plugins." },
+  { id: "TM-06", name: "Floating-point error", text: "Amounts are integer minor units with checked arithmetic, so totals cannot drift." },
+  { id: "TM-07", name: "Worker crashes and out-of-memory", text: "The OCR and model workers run under supervision with timeouts and recovery." },
+  { id: "TM-08", name: "Backup tampering", text: "Backups are authenticated and encrypted. An archive that fails its integrity check is rejected." },
+];
+---
+
+<Base title="Security" description="How SAAR keeps financial data on your machine: network denial, encrypted workspaces, exact arithmetic, injection defence, with each claim linked to source.">
+  <header class="phead wrap">
+    <p class="float" style="top:24%;right:3%">(01) Each claim links<br />to the file behind it.</p>
+    <div class="phead__text">
+      <p class="eyebrow rise">Security</p>
+      <h1 class="rise" style="--d:100ms">Private by construction, checkable in the source.</h1>
+      <p class="lede rise" style="--d:220ms">SAAR is designed to keep financial data on the user's machine. These are the specific mechanisms, each linked to the file that implements it, and the threats the project wrote down before building.</p>
+    </div>
+    <div class="phead__art rise" style="--d:300ms"><PixelArt scene="vault" ratio="5 / 4" label="Pixel illustration: a vault with encrypted bytes circling it" /></div>
+  </header>
+
+  <div class="sand" style="padding-block:clamp(3rem,6vw,5rem) clamp(4rem,8vw,7rem)">
+  <section class="wrap">
+    <SecurityRows />
+    <p class="note">No independent security audit is claimed here. The project's own egress audit was run on Debian, and the repository states that a source build alone does not verify an installer or a disconnected target machine.</p>
+  </section>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Threat model</p>
+        <h2 class="h2">Eight threats, written before the code.</h2>
+        <p class="lede">The threat model sits next to a registry of ten synthetic test fixtures, so each mitigation can be exercised against a known input.</p>
+        <p style="margin-top:1.4rem"><SourceLink path="Docs/ADR/0002-threat-model-and-fixture-registry.md" /></p>
+      </div>
+      <ul class="tm">
+        {threats.map((t) => (
+          <li>
+            <span class="tm__id px">{t.id}</span>
+            <span class="tm__name">{t.name}</span>
+            <span class="tm__text">{t.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section sand">
+    <div class="wrap reveal">
+      <p class="eyebrow">Before real data</p>
+      <h2 class="h2">What you should still do.</h2>
+      <p class="lede">Review the threat model and the code before using real financial records in a new environment. Model weights and native sidecars are provided separately, so check their hashes: the expected model SHA-256 is recorded in the Rust runtime source.</p>
+      <p style="margin-top:1.4rem"><SourceLink path="src-tauri/src/ai/llm_engine.rs" /></p>
+    </div>
+  </section>
+</Base>

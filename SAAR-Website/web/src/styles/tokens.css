@@ -1,0 +1,45 @@
+/* Blue is the default surface. .sand re-themes a section to the cool off-white.
+   Palette sampled from the reference: blue #004ac7, off-white #dedfe4. */
+:root {
+  --paper: #004ac7;
+  --paper-sunk: #003fae;
+  --night: #070707;
+  --ink: #dedfe4;
+  --ink-soft: #d3dcf7;
+  --mute: #aebcee;
+  --line: rgb(222 223 228 / 38%);
+  --navy: #dedfe4;
+  --navy-bright: #dedfe4;
+  --sky: #dedfe4;
+  --on-ink: #004ac7;
+  --bone: #dedfe4;
+  --code-line: #dedfe4;
+  --blue-lit: #4a82ff;
+
+  --font-display: "DotGothic16", "Courier New", monospace;
+  --font-body: "Hanken Grotesk Variable", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-pixel: "Tiny5", "Courier New", monospace;
+
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --page: 80rem;
+  --header: 4.5rem;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --radius: 4px;
+}
+
+.sand {
+  --paper: #dedfe4;
+  --paper-sunk: #cfd1d9;
+  --ink: #0a0b10;
+  --ink-soft: #2a2d3a;
+  --mute: #555a70;
+  --line: rgb(10 11 16 / 28%);
+  --navy: #004ac7;
+  --navy-bright: #004ac7;
+  --sky: #004ac7;
+  --on-ink: #dedfe4;
+  --code-line: #004ac7;
+  background-color: var(--paper);
+  color: var(--ink);
+}

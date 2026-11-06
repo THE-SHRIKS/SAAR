@@ -1,0 +1,71 @@
+<div class="arch" role="img" aria-label="Architecture: the React interface calls the Tauri command bridge, which calls the Rust core. The core talks to a per-workspace SQLCipher database, an encrypted document store, a local llama.cpp model and a local OCR worker.">
+  <svg viewBox="0 0 1100 470" aria-hidden="true">
+    <g>
+      <path class="ln" d="M230 72 H290" />
+      <path class="ln" d="M500 72 H560" />
+      <path class="ln" d="M790 72 H825 V60 H860" />
+      <path class="ln" d="M790 72 H825 V170 H860" />
+      <path class="ln" d="M790 72 H825 V280 H860" />
+      <path class="ln" d="M790 72 H825 V390 H860" />
+    </g>
+    <g>
+      <rect class="box" x="20" y="30" width="210" height="84" rx="4" />
+      <text x="40" y="68">React + TypeScript</text>
+      <text class="sub" x="40" y="92">interface · src/</text>
+
+      <rect class="box" x="290" y="30" width="210" height="84" rx="4" />
+      <text x="310" y="68">Tauri command bridge</text>
+      <text class="sub" x="310" y="92">typed IPC · commands.rs</text>
+
+      <rect class="box box--core" x="560" y="30" width="230" height="420" rx="4" />
+      <text x="582" y="68">Rust core</text>
+      <text class="sub" x="582" y="92">finance · ingestion</text>
+      <text class="sub" x="582" y="112">ai · security · export</text>
+      <text class="sub" x="582" y="176">money.rs · exact i64 math</text>
+      <text class="sub" x="582" y="198">matching.rs · multi-pass rules</text>
+      <text class="sub" x="582" y="220">anomaly.rs · duplicates</text>
+      <text class="sub" x="582" y="242">grounding.rs · citations</text>
+      <text class="sub" x="582" y="264">defense.rs · injection guard</text>
+
+      <rect class="box" x="860" y="20" width="220" height="80" rx="4" />
+      <text x="880" y="56">SQLCipher database</text>
+      <text class="sub" x="880" y="80">one per workspace</text>
+
+      <rect class="box" x="860" y="130" width="220" height="80" rx="4" />
+      <text x="880" y="166">Encrypted document store</text>
+      <text class="sub" x="880" y="190">AES-256-GCM blobs</text>
+
+      <rect class="box" x="860" y="240" width="220" height="80" rx="4" />
+      <text x="880" y="276">Local model</text>
+      <text class="sub" x="880" y="300">llama.cpp · Qwen3 4B</text>
+
+      <rect class="box" x="860" y="350" width="220" height="80" rx="4" />
+      <text x="880" y="386">OCR worker</text>
+      <text class="sub" x="880" y="410">local Python sidecar</text>
+    </g>
+    <g>
+      <rect class="dot" x="226" y="68" width="8" height="8" />
+      <rect class="dot" x="496" y="68" width="8" height="8" />
+      <rect class="dot" x="856" y="56" width="8" height="8" />
+      <rect class="dot" x="856" y="166" width="8" height="8" />
+      <rect class="dot" x="856" y="276" width="8" height="8" />
+      <rect class="dot" x="856" y="386" width="8" height="8" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .ln {
+    animation: flow 1.4s linear infinite;
+  }
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ln {
+      animation: none;
+    }
+  }
+</style>

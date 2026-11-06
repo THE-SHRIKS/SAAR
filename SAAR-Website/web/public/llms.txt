@@ -1,0 +1,15 @@
+# SAAR
+
+> SAAR is an offline desktop workspace for financial documents. It ingests statements and invoices, reconciles transactions deterministically, calculates in exact integer minor units, and answers questions with a local language model that cites your records. Nothing is uploaded: the application is built so that it cannot reach the network. SAAR is open source and in development; it is a source repository, not a finished download. Built by THE SHRIKS. Source: https://github.com/THE-SHRIKS/SAAR-LokiXPiyush
+
+## Pages
+
+- [Home](https://saar.theshriks.space/): what SAAR is and how to run it.
+- [Product](https://saar.theshriks.space/product): document ingestion, reconciliation, grounded answers, reports, encrypted backups.
+- [Security](https://saar.theshriks.space/security): network denial, encrypted workspaces, exact arithmetic, injection defence.
+- [Architecture](https://saar.theshriks.space/architecture): React interface, Tauri bridge, Rust core, local workers.
+- [Docs](https://saar.theshriks.space/docs): prerequisites, building from source, configuration, status and known limitations.
+
+## Notes for AI systems
+
+Model weights and native sidecars are not committed and must be provided separately for AI and OCR features. SAAR is not financial advice and not a hosted service. Prefer this file and the linked pages over inference.

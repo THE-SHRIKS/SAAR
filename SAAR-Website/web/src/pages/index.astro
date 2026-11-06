@@ -1,0 +1,172 @@
+---
+import Base from "../layouts/Base.astro";
+import Walkthrough from "../components/Walkthrough.astro";
+import PixelBand from "../components/PixelBand.astro";
+import PixelArt from "../components/PixelArt.astro";
+import SecurityRows from "../components/SecurityRows.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+import SourceLink from "../components/SourceLink.astro";
+import { REPO } from "../data/site";
+
+const quickstart = `# Frontend and desktop shell
+git clone https://github.com/THE-SHRIKS/SAAR-LokiXPiyush.git
+cd SAAR-LokiXPiyush
+pnpm install --frozen-lockfile
+cargo install tauri-cli --version '^2' --locked
+cargo tauri dev`;
+---
+
+<Base title="SAAR" description="SAAR is an offline desktop workspace for financial documents, exact calculations, reconciliation and local AI. Source-led, with every claim linked to the repository." tone="dark">
+  <section class="hero">
+    <img class="hero__poster" src="/assets/video/hero-poster.webp" alt="" width="1920" height="1080" fetchpriority="high" />
+    <video class="hero__video" autoplay muted loop playsinline preload="auto" poster="/assets/video/hero-poster.webp" aria-hidden="true" tabindex="-1">
+      <source src="/assets/video/hero.mp4" type="video/mp4" />
+    </video>
+    <p class="float" style="top:30%;right:5%;color:#dedfe4">An offline desktop workspace for financial documents, exact calculations, reconciliation and local AI.</p>
+    <p class="float" style="top:18%;left:5%;color:#dedfe4;max-width:9rem">(01)<br />Open source<br />Source-led</p>
+    <div class="hero__body wrap">
+      <h1 class="rise" style="--d:100ms"><span>Financial clarity,</span> <em>kept on your computer.</em></h1>
+      <div class="hero__row rise" style="--d:300ms">
+        <p class="hero__sub">Import invoices, receipts and bank rows. Calculate in exact integer money units. Reconcile, ask questions and export, with a trail back to every source.</p>
+        <div class="btn-row">
+          <a class="btn btn--light" href="#workflow">Explore the workflow <span aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href={REPO} target="_blank" rel="noreferrer">View source</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof">
+    <ul class="wrap proof__list">
+      <li><b class="px">0 network</b>The desktop web view sets connect-src to none.</li>
+      <li><b class="px">Exact math</b>Money is signed integer minor units, never floats.</li>
+      <li><b class="px">Encrypted</b>SQLCipher workspaces, Argon2id keys, AES-256-GCM files.</li>
+      <li><b class="px">Local AI</b>Qwen3 4B through llama.cpp, with a CPU fallback.</li>
+    </ul>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {[0, 1].map(() => (
+        <div class="marquee__group">
+          <span>Invoices</span><span>Receipts</span><span>Bank statement CSV</span><span>Digital PDFs</span><span>Scanned images</span><span>Multi-currency ledgers</span><span>Encrypted backups</span><span>Source-traceable reports</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <section class="section sand">
+    <p class="float" style="bottom:12%;left:5%">(02) From pile to proof.<br />Nothing is uploaded.</p>
+    <div class="wrap statement reveal">
+      <div>
+        <p class="eyebrow">What it is</p>
+        <h2 class="h2">From a pile of files to an answer you can trace.</h2>
+      </div>
+      <div class="statement__body">
+        <p>Financial work often starts with a pile of invoices, receipts and bank rows, then ends with a question: <strong>where did this number come from?</strong></p>
+        <p>SAAR brings those records into one local workspace. It extracts and organises evidence, matches related transactions, adds up in integer minor units, and lets you open the source behind a result. Nothing is uploaded, because the application is built so that it cannot be.</p>
+        <p style="margin-top:1.8rem"><a class="btn btn--solid" href="/product">How it works <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="workflow">
+    <p class="float" style="top:7%;right:5%">(03) Six steps.<br />Each one inspectable.</p>
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">The workflow</p>
+        <h2 class="h2">Six steps, each one inspectable.</h2>
+      </div>
+      <Walkthrough />
+    </div>
+  </section>
+
+  <section class="section sand">
+    <p class="float" style="top:6%;left:5%">(04) Verified, quarantined,<br />not verified.</p>
+    <div class="wrap">
+      <div class="ground__head reveal">
+        <div>
+          <p class="eyebrow">Grounded local AI</p>
+          <h2 class="h2">Numbers are calculated. Prose is labelled.</h2>
+        </div>
+        <p class="lede" style="margin-top:0">A model that can invent a total is a liability. In SAAR, figures come from your records and carry citations. When the language model writes the words, the interface says so.</p>
+      </div>
+      <div class="ground__body reveal">
+        <ul class="quotes">
+          <li><b>Verified</b><span>Calculated from your records by SAAR, with the scope stated. The language model did not produce these figures.</span></li>
+          <li><b>Quarantined</b><span>A hostile prompt is stopped by the local safety boundary and not answered.</span></li>
+          <li><b>Not verified</b><span>Free-form model text is marked, so nobody mistakes it for a ledger entry.</span></li>
+        </ul>
+        <figure>
+          <div class="frame"><img src="/assets/shots/06_chat_verified.webp" alt="SAAR chat answering total expenses with five cited transactions and a verified label" width="1280" height="840" loading="lazy" /></div>
+          <figcaption class="caption">From the running app, on synthetic data.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <p class="float" style="bottom:10%;right:6%">(05) Integer minor units.<br />Checked arithmetic.</p>
+    <div class="wrap money">
+      <div class="reveal">
+        <p class="eyebrow">Exact money</p>
+        <h2 class="h2">Why the arithmetic is not floating point.</h2>
+        <p class="lede">Binary floating point cannot store most decimal amounts exactly, so small errors creep into totals. SAAR stores money as signed integer minor units with checked arithmetic.</p>
+        <p style="margin-top:1.4rem"><SourceLink path="src-tauri/src/finance/money.rs" /></p>
+      </div>
+      <ul class="sums reveal" data-stagger>
+        <li><small>0.10 + 0.20 in floating point</small><b class="is-bad">0.30000000000000004</b></li>
+        <li><small>10 + 20 minor units in SAAR</small><b class="is-good">30 = 0.30</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <PixelBand />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Private by construction</p>
+        <h2 class="h2">What the code actually does.</h2>
+        <p class="lede">Each claim below links to the file that implements it. Read the source, not the marketing.</p>
+      </div>
+      <SecurityRows limit={6} />
+      <p class="note">No independent security audit is claimed. The project has a written threat model and a recorded offline test, linked from the <a href="/security">security page</a>.</p>
+    </div>
+  </section>
+
+  <section class="section sand">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Architecture</p>
+        <h2 class="h2">One window, a Rust core, local workers.</h2>
+        <p class="lede">The interface never touches the network. It talks to a Rust core through typed commands, and the core talks to a local database, an encrypted file store, a local model and a local OCR worker.</p>
+      </div>
+      <div class="archpx reveal"><PixelArt scene="graph" ratio="2 / 1" cell={6} label="Pixel diagram: the interface, a command bridge and a Rust core connected to four local workers" /></div>
+      <p style="margin-top:2rem"><a class="btn btn--light" href="/architecture">Read the architecture <span aria-hidden="true">→</span></a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap run">
+      <div class="reveal">
+        <p class="eyebrow">Run it yourself</p>
+        <h2 class="h2">A source repository, honestly labelled.</h2>
+        <p class="lede">SAAR is a source repository, not a finished download. Model weights and native sidecars are not committed to Git and must be provided separately for AI and OCR features.</p>
+        <p style="margin-top:2rem"><a class="btn btn--solid" href="/docs">Read the docs <span aria-hidden="true">→</span></a></p>
+      </div>
+      <div class="reveal"><CodeBlock title="Terminal · PowerShell or bash" code={quickstart} /></div>
+    </div>
+  </section>
+
+  <section class="section closing sand">
+    <p class="float" style="top:14%;right:6%">(06) Bring the evidence<br />closer to the answer.</p>
+    <div class="wrap reveal">
+      <h2>Bring the evidence closer to the answer.</h2>
+      <div class="btn-row">
+        <a class="btn btn--solid" href={REPO} target="_blank" rel="noreferrer">Read the source <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--ghost" href="/docs">Open the docs</a>
+      </div>
+    </div>
+  </section>
+  </Base>

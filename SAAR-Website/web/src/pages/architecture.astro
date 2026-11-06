@@ -1,0 +1,84 @@
+---
+import Base from "../layouts/Base.astro";
+import ArchDiagram from "../components/ArchDiagram.astro";
+import PixelArt from "../components/PixelArt.astro";
+import SourceLink from "../components/SourceLink.astro";
+
+const map = [
+  { area: "Interface and typed command calls", where: [{ p: "src", k: "tree" }] },
+  { area: "Native application and IPC commands", where: [{ p: "src-tauri/src", k: "tree" }, { p: "src-tauri/src/commands.rs", k: "blob" }] },
+  { area: "Financial arithmetic and reconciliation", where: [{ p: "src-tauri/src/finance", k: "tree" }] },
+  { area: "Database and workspace lifecycle", where: [{ p: "src-tauri/src/db", k: "tree" }, { p: "src-tauri/src/workspace_store.rs", k: "blob" }] },
+  { area: "Local model and grounded answers", where: [{ p: "src-tauri/src/ai", k: "tree" }] },
+  { area: "Document ingestion", where: [{ p: "src-tauri/src/ingestion", k: "tree" }] },
+  { area: "OCR worker", where: [{ p: "workers/ocr", k: "tree" }] },
+  { area: "Design decisions and test evidence", where: [{ p: "Docs", k: "tree" }, { p: "Docs/evidence", k: "tree" }] },
+] as const;
+
+const flow = [
+  { t: "Classify the question", d: "An allow-listed intent parser decides what is being asked. Free-form instructions cannot reach the database." },
+  { t: "Compute from records", d: "The Rust core calculates the figure in integer minor units and collects the transactions it used." },
+  { t: "Cite the evidence", d: "The answer carries identifiers for each supporting invoice or transaction, which open in the evidence inspector." },
+  { t: "Let the model write words", d: "The local model may phrase the answer, but it cannot change a figure or write to the ledger." },
+  { t: "Label the result", d: "The interface marks the answer Verified when SAAR calculated it, or Not verified when the model wrote it." },
+];
+---
+
+<Base title="Architecture" description="How SAAR is built: a React interface, a typed Tauri bridge, a Rust core and local workers for the database, encrypted store, model and OCR.">
+  <header class="phead wrap">
+    <p class="float" style="top:24%;right:3%">(01) Tauri 2, Rust,<br />React and TypeScript.</p>
+    <div class="phead__text">
+      <p class="eyebrow rise">Architecture</p>
+      <h1 class="rise" style="--d:100ms">One window, a Rust core, local workers.</h1>
+      <p class="lede rise" style="--d:220ms">The desktop app is built with Tauri 2, Rust, React and TypeScript. The interface is deliberately thin. Everything that touches money, files or the model lives in the Rust core.</p>
+    </div>
+    <div class="phead__art rise" style="--d:300ms"><PixelArt scene="graph" ratio="5 / 4" label="Pixel diagram: the interface, a command bridge and a Rust core connected to four local workers" /></div>
+  </header>
+
+  <section class="section sand" style="padding-top:clamp(3rem,6vw,5rem)">
+    <div class="wrap reveal">
+      <ArchDiagram />
+      <p class="caption">The language model and the OCR worker run as local sidecar processes over pipes. No loopback server is bound, and no worker opens a network socket.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Where to look</p>
+        <h2 class="h2">A map of the repository.</h2>
+      </div>
+      <ul class="map" style="margin-top:3rem">
+        {map.map((row) => (
+          <li>
+            <span class="map__area">{row.area}</span>
+            <span class="map__where">{row.where.map((w) => <SourceLink path={w.p} kind={w.k} />)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section sand">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">How a question is answered</p>
+        <h2 class="h2">Five steps between you and the model.</h2>
+        <p class="lede">The model is the last step, not the first. That ordering is what keeps a generated sentence from becoming a ledger entry.</p>
+        <p style="margin-top:1.4rem"><SourceLink path="Docs/ADR/0008-local-ai-and-grounded-chat-architecture.md" /></p>
+      </div>
+      <ol class="flow">
+        {flow.map((f) => <li><div><b>{f.t}</b><span>{f.d}</span></div></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap reveal">
+      <p class="eyebrow">Exact money</p>
+      <h2 class="h2">Integer minor units, checked.</h2>
+      <p class="lede">Amounts are signed 64-bit integers in the currency's minor unit, with checked arithmetic that refuses to overflow and a currency mismatch that cannot be added. Totals are grouped by currency, never converted without a recorded rate.</p>
+      <p style="margin-top:1.4rem"><SourceLink path="src-tauri/src/finance/money.rs" /></p>
+    </div>
+  </section>
+  </Base>

@@ -1,0 +1,14 @@
+---
+import { GATES } from "../data/site";
+---
+
+<ol class="gates">
+  {GATES.map((gate) => (
+    <li>
+      <span class="gates__id px">{gate.id}</span>
+      <span class="gates__name">{gate.name}</span>
+      <span class="gates__detail">{gate.detail}</span>
+      <span class="gates__ok">Signed off</span>
+    </li>
+  ))}
+</ol>

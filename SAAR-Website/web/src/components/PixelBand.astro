@@ -1,0 +1,22 @@
+<section class="band sand" aria-labelledby="band-title">
+  <div class="band__body wrap">
+    <div>
+      <p class="eyebrow">From pile to proof</p>
+      <h2 id="band-title" class="h2">A trail from document to decision.</h2>
+    </div>
+    <ul class="band__legend">
+      <li>Documents in</li>
+      <li>Evidence read</li>
+      <li>Ledger resolved</li>
+    </ul>
+  </div>
+  <canvas class="band__canvas" data-band aria-hidden="true"></canvas>
+</section>
+
+<script>
+  import { mount } from "../scripts/pixel";
+  import { SCENES } from "../scripts/pixel-scenes";
+
+  const canvas = document.querySelector<HTMLCanvasElement>("[data-band]");
+  if (canvas) mount(canvas, [SCENES.trail!], { cell: 6, ink: "#0a0b10", accent: "#004ac7" });
+</script>

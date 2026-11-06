@@ -1,0 +1,222 @@
+---
+import Base from "../layouts/Base.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+import Gates from "../components/Gates.astro";
+import PixelArt from "../components/PixelArt.astro";
+import SourceLink from "../components/SourceLink.astro";
+import { REPO, STATUS_DATE } from "../data/site";
+
+const toc = [
+  { id: "overview", label: "Overview" },
+  { id: "prerequisites", label: "Prerequisites" },
+  { id: "run", label: "Install and run" },
+  { id: "model", label: "Model and sidecars" },
+  { id: "using", label: "Using SAAR" },
+  { id: "data", label: "Data and configuration" },
+  { id: "windows", label: "Windows build" },
+  { id: "verify", label: "Verify a checkout" },
+  { id: "map", label: "Repository map" },
+  { id: "status", label: "Project status" },
+  { id: "limits", label: "Known limitations" },
+  { id: "licence", label: "Licence and notices" },
+];
+
+const clone = `git clone https://github.com/THE-SHRIKS/SAAR-LokiXPiyush.git
+cd SAAR-LokiXPiyush
+pnpm install --frozen-lockfile
+cargo install tauri-cli --version '^2' --locked
+cargo tauri dev`;
+
+const verify = `pnpm test
+pnpm run build
+pnpm run lint
+cargo test --manifest-path src-tauri/Cargo.toml
+cargo fmt --manifest-path src-tauri/Cargo.toml --check`;
+
+const map = [
+  { area: "Interface and typed command calls", p: "src", k: "tree" },
+  { area: "Native application and IPC commands", p: "src-tauri/src", k: "tree" },
+  { area: "Financial arithmetic and reconciliation", p: "src-tauri/src/finance", k: "tree" },
+  { area: "Database and workspace lifecycle", p: "src-tauri/src/db", k: "tree" },
+  { area: "Local model and grounded answers", p: "src-tauri/src/ai", k: "tree" },
+  { area: "Document ingestion", p: "src-tauri/src/ingestion", k: "tree" },
+  { area: "OCR worker", p: "workers/ocr", k: "tree" },
+  { area: "Design decisions and test evidence", p: "Docs", k: "tree" },
+] as const;
+
+const phases = [
+  { name: "Phase 0", text: "Feasibility and toolchain: desktop shell, OCR on a real scan, offline inference, threat model." },
+  { name: "Phase 1", text: "Native shell and storage: encrypted workspace keys, SQLCipher, blob store, restrictive web view policy." },
+  { name: "Phase 2", text: "Ingestion: PDF and image pipeline, CSV mapper, normaliser, de-duplication." },
+  { name: "Phase 3", text: "Financial core: exact money, matching, anomalies, review lifecycle, aggregates." },
+  { name: "Phase 4", text: "Local AI: llama.cpp runtime, grounding, constrained classification, injection defence." },
+  { name: "Phase 5", text: "Interface: conversation, evidence inspector, review, reports, settings." },
+  { name: "Phase 6", text: "Reliability: traceable exports, encrypted backup, log scrubbing, offline audit." },
+  { name: "Phase 7", text: "Native Windows release: sidecars, installer, offline regression sign-off." },
+];
+
+const gaps = [
+  { t: "No project licence", d: "The repository has no root LICENSE file, so no project-wide open-source licence is asserted. Third-party notices are collected separately." },
+  { t: "Source, not a download", d: "SAAR is a source repository. Model weights and native sidecars are excluded from Git and have to be provided separately." },
+  { t: "Older documents differ", d: "Some release and model-manifest documents describe earlier builds. The active model path and hash are in the Rust runtime source." },
+  { t: "A helper is not wired in", d: "The newly added runtime paths helper is not yet connected to application startup." },
+  { t: "No independent audit", d: "The security claims come from the project's own threat model, tests and egress audit. No external audit is cited." },
+  { t: "Verify the target machine", d: "A successful source build does not by itself verify an installer or a disconnected target machine." },
+];
+---
+
+<Base title="Docs" description="SAAR documentation: prerequisites, building and running from source, placing the model and sidecars, configuration, verification, repository map, project status and known limitations.">
+  <header class="phead wrap">
+    <p class="float" style="top:24%;right:3%">(01) Source repository.<br />Not a binary download.</p>
+    <div class="phead__text">
+      <p class="eyebrow rise">Docs</p>
+      <h1 class="rise" style="--d:100ms">Everything you need to run and read SAAR.</h1>
+      <p class="lede rise" style="--d:220ms">SAAR is a source repository, not a complete binary distribution. This page covers setup, how the pieces fit, how to verify a checkout, and where the project honestly stands.</p>
+    </div>
+    <div class="phead__art rise" style="--d:300ms"><PixelArt scene="terminal" ratio="5 / 4" label="Pixel illustration: a terminal typing out build commands" /></div>
+  </header>
+
+  <div class="sand">
+  <div class="wrap docs">
+    <aside class="toc" aria-label="On this page">
+      <p class="eyebrow">On this page</p>
+      <ol>
+        {toc.map((t) => <li><a href={`#${t.id}`} data-toc={t.id}>{t.label}</a></li>)}
+      </ol>
+    </aside>
+
+    <article class="doc">
+      <section id="overview">
+        <h2>Overview</h2>
+        <p>SAAR is an offline desktop workspace for financial documents, exact calculations, reconciliation and local AI. It extracts and organises evidence from invoices, receipts and bank rows, matches related transactions, calculates totals in integer minor units, and lets you open the source behind a result.</p>
+        <ul class="checks">
+          <li><span><b>Desktop first.</b> Tauri 2, Rust, React and TypeScript.</span></li>
+          <li><span><b>Local intelligence.</b> Qwen3 4B through llama.cpp, with GPU offload and a CPU fallback when the runtime is available.</span></li>
+          <li><span><b>Traceable answers.</b> Verified figures are calculated from records. Generated prose is identified separately.</span></li>
+          <li><span><b>Exact money.</b> Amounts are signed integer minor units, never binary floating point.</span></li>
+          <li><span><b>Private by design.</b> The web view's content security policy sets <code>connect-src</code> to <code>'none'</code>.</span></li>
+        </ul>
+      </section>
+
+      <section id="prerequisites">
+        <h2>Prerequisites</h2>
+        <ul class="checks">
+          <li><span>Node.js and <code>pnpm</code> for the interface.</span></li>
+          <li><span>Rust and the platform's Tauri 2 build prerequisites for the desktop shell.</span></li>
+          <li><span>On Windows: the Visual Studio C++ build tools and WebView2.</span></li>
+          <li><span>A compatible local <code>llama-cli</code> binary and Qwen3 4B GGUF weights for chat and classification.</span></li>
+          <li><span>The OCR worker and its models for scanned documents.</span></li>
+        </ul>
+      </section>
+
+      <section id="run">
+        <h2>Install and run</h2>
+        <p>Clone the repository, install the frontend dependencies and launch the desktop shell in development mode. Without the model and sidecars the core workspace still starts, but local model features are unavailable.</p>
+        <CodeBlock title="Terminal · PowerShell or bash" code={clone} />
+      </section>
+
+      <section id="model">
+        <h2>Model and sidecars</h2>
+        <p>Model weights and native sidecars are not committed to Git. The app looks for them relative to the checkout.</p>
+        <ul class="checks">
+          <li><span>Windows binary: <code>bin/llama/llama-cli.exe</code></span></li>
+          <li><span>Unix binary: <code>bin/llama/llama-cli</code></span></li>
+          <li><span>Model: <code>models/weights/Qwen3-4B-Q4_K_M.gguf</code></span></li>
+          <li><span>Expected SHA-256: <code>7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5</code></span></li>
+        </ul>
+        <p>The active model path and hash are recorded in the Rust runtime source, which is the source of truth where older documents differ.</p>
+        <p><SourceLink path="src-tauri/src/ai/llm_engine.rs" /></p>
+      </section>
+
+      <section id="using">
+        <h2>Using SAAR</h2>
+        <ol class="steps">
+          <li><b>Create a workspace.</b> Choose a passphrase. It derives the workspace key and is never written to disk.</li>
+          <li><b>Import evidence.</b> Add PDFs, images and statement CSVs. Files are de-duplicated by content hash.</li>
+          <li><b>Inspect sources.</b> Open the evidence inspector to read an extracted field beside its original document.</li>
+          <li><b>Run reconciliation.</b> Review proposed links and flagged anomalies. Approve, reject or correct each one.</li>
+          <li><b>Ask questions.</b> Answers are calculated from your records and cited. Model prose is labelled as not verified.</li>
+          <li><b>Report and back up.</b> Export CSV or PDF reports, and create encrypted backups you can restore into a fresh profile.</li>
+        </ol>
+        <p>See the <a href="/product">product page</a> for how each step works.</p>
+      </section>
+
+      <section id="data">
+        <h2>Data and configuration</h2>
+        <ul class="checks">
+          <li><span>Each workspace is its own SQLCipher database, with encrypted document storage beside it.</span></li>
+          <li><span><code>SAAR_DATA_DIR</code> relocates workspace data for portable or isolated runs.</span></li>
+          <li><span>Backups are authenticated archives. A wrong passphrase or a tampered archive is rejected.</span></li>
+          <li><span>Logs are scrubbed of credentials, card numbers and personal identifiers.</span></li>
+        </ul>
+        <p>The <a href="/security">security page</a> links each mechanism to its implementing file.</p>
+      </section>
+
+      <section id="windows">
+        <h2>Windows build</h2>
+        <p>The Windows guide covers the native toolchain and packaging: building the llama.cpp and OCR sidecars, and producing the Tauri 2 offline installer. The project's ledger records an offline Windows acceptance run for its own release.</p>
+        <p><SourceLink path="Docs/WINDOWS_BUILD_GUIDE.md" /> <SourceLink path="scripts/windows_build_all.ps1" /></p>
+      </section>
+
+      <section id="verify">
+        <h2>Verify a checkout</h2>
+        <p>The repository includes fixtures and evidence under <code>tests/</code> and <code>Docs/evidence/</code>. Some native and GUI checks need the model, the OCR sidecar and platform tooling.</p>
+        <CodeBlock title="Terminal · from the repository root" code={verify} />
+        <p>A successful source build alone does not verify an installer or a disconnected target machine.</p>
+      </section>
+
+      <section id="map">
+        <h2>Repository map</h2>
+        <ul class="map">
+          {map.map((row) => (
+            <li>
+              <span class="map__area">{row.area}</span>
+              <span class="map__where"><SourceLink path={row.p} kind={row.k} /></span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="status">
+        <h2>Project status</h2>
+        <p>The repository keeps a status ledger, last updated {STATUS_DATE}. It records these eight gates as signed off, each with its own evidence there.</p>
+        <p><SourceLink path="STATUS.md" /></p>
+        <Gates />
+        <ul class="phases">
+          {phases.map((p) => <li><b>{p.name}</b>{p.text}<small>Completed</small></li>)}
+        </ul>
+      </section>
+
+      <section id="limits">
+        <h2>Known limitations</h2>
+        <p>Read these before relying on SAAR.</p>
+        <ul class="gaps">
+          {gaps.map((g) => <li><b>{g.t}</b><span>{g.d}</span></li>)}
+        </ul>
+      </section>
+
+      <section id="licence">
+        <h2>Licence and notices</h2>
+        <p>The repository currently has no root licence file, so no project-wide open-source licence is asserted. Third-party component notices are collected in the attributions file. SAAR is built by THE SHRIKS.</p>
+        <p><SourceLink path="Docs/ATTRIBUTION.md" /></p>
+        <p style="margin-top:2rem"><a class="btn btn--solid" href={REPO} target="_blank" rel="noreferrer">Open the repository <span aria-hidden="true">↗</span></a></p>
+      </section>
+    </article>
+  </div>
+  </div>
+
+  <script>
+    const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc]")];
+    const sections = links.map((a) => document.getElementById(a.dataset.toc ?? "")).filter((s): s is HTMLElement => !!s);
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          links.forEach((a) => a.classList.toggle("is-active", a.dataset.toc === e.target.id));
+        }
+      },
+      { rootMargin: "-30% 0px -60% 0px" },
+    );
+    sections.forEach((s) => io.observe(s));
+  </script>
+</Base>
